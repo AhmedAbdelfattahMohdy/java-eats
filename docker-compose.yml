@@ -13,6 +13,8 @@ services:
     depends_on:
       - postgres
       - redis
+    networks:
+      - javaeats-network
 
   postgres:
     image: postgres:15
@@ -25,6 +27,13 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+    networks:
+      - javaeats-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   redis:
     image: redis:7
@@ -33,6 +42,8 @@ services:
       - "6379:6379"
     volumes:
       - redisdata:/data
+    networks:
+      - javaeats-network
 
   pgadmin:
     image: dpage/pgadmin4
@@ -40,17 +51,22 @@ services:
     environment:
       - PGADMIN_DEFAULT_EMAIL=admin@javaeats.dev
       - PGADMIN_DEFAULT_PASSWORD=admin
+      - PGADMIN_CONFIG_SERVER_MODE=False
+      - PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED=False
     ports:
       - "5050:80"
     depends_on:
       - postgres
-    links:
-      - postgres
+    networks:
+      - javaeats-network
     volumes:
       - pgadmindata:/var/lib/pgadmin
+
+networks:
+  javaeats-network:
+    driver: bridge
 
 volumes:
   pgdata:
   redisdata:
   pgadmindata:
-

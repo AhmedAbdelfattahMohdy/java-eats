@@ -1,7 +1,6 @@
 -- Enable required extensions
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 CREATE EXTENSION IF NOT EXISTS "postgis";
-
 -- Create custom types
 CREATE TYPE restaurant_status AS ENUM ('ACTIVE', 'CLOSED', 'MAINTENANCE', 'BUSY');
 CREATE TYPE cart_status AS ENUM ('ACTIVE', 'ABANDONED', 'COMPLETED');
@@ -25,7 +24,7 @@ CREATE TABLE role (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     created_by BIGINT,
-    updated_by BIGINT 
+    updated_by BIGINT
 );
 
 -- User role junction table
@@ -59,6 +58,7 @@ CREATE TABLE address (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     created_by BIGINT,
     updated_by BIGINT
+--     location int not null
 );
 
 -- Payment type table
@@ -298,7 +298,6 @@ CREATE INDEX idx_user_email ON user(user_email);
 CREATE INDEX idx_user_username ON user(username);
 CREATE INDEX idx_customer_user_id ON customer(user_id);
 CREATE INDEX idx_address_customer_id ON address(customer_id);
-CREATE INDEX idx_address_location ON address USING GIST(location);
 CREATE INDEX idx_restaurant_location ON restaurant USING GIST(location);
 CREATE INDEX idx_restaurant_category_id ON restaurant(restaurant_category_id);
 CREATE INDEX idx_menu_restaurant_id ON menu(restaurant_id);
